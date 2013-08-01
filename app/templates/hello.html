@@ -1,0 +1,80 @@
+{% extends "bootstrap_base.html" %}
+
+{% block title %}TweeterNews{% endblock title %}
+
+{% block body_content %}
+    <div class="navbar">
+      <div class="container">
+      <a class="navbar-brand" href="#">TweeterNews</a>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="{{url_for('index')}}">Home</a></li>
+
+          {% if g.screen_name %}
+          <li><a href="{{url_for('logout')}}">Logout</a></li>
+          {% else %}
+          <li><a href="{{url_for('login')}}">Login</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Main hero unit for a primary marketing message or call to action -->
+        <div class="jumbotron">
+        {% if user %}
+            <img class="pull-right" src="{{user.profile_image_url}}"/>
+            <h1>Hello {{user.name}}!</h1>
+            <p>{{user.description}}</p>
+        {% else %}
+            <h1>Welcome!</h1>
+            <p><a class="btn btn-primary btn-large" href="{{url_for('login')}}">Please Log In with Twitter</a></p>
+        {% endif %}
+        </div>
+
+
+        <div class="panel">
+        {% if timeline %}
+            <!-- Default panel contents -->
+            <div class="panel-heading">Your Custom Twitter News</div>
+            <div class="list-group-flush">
+                {% for tweet in timeline %}
+                {% if tweet.entities.urls %}
+                    {% for url in tweet.entities.urls %}
+                    <div  class="list-group-item">
+                        <a href="{{url.expanded_url}}">
+                            <h4 class="list-group-item-heading">
+                                {{tweet.bot_contents.title|safe}} <small class="pull-right">@{{tweet.user.screen_name}}</small></h4>
+                        </a>
+                        <p class="list-group-item-text">{{tweet.text|safe}}</p>
+                        <p>
+                        {% for tag in tweet.bot_contents.tags %}
+                            <span class="label label-info">{{tag}}</span>
+                        {% endfor %}
+                        </p>
+                        <button type="button" class="btn-default collapsed" data-toggle="collapse" data-target="#{{tweet.id}}">
+                          view article
+                        </button>
+                        <br>
+
+                        <div id="{{tweet.id}}" class="collapse">
+                            <hr>
+                            {{tweet.bot_contents.html|safe}}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="panel-heading">No News =(</div>
+        {% endif %}
+        </div>
+
+      <hr>
+
+      <footer>
+      <p>&copy; Hand 2013</p>
+      </footer>
+
+    </div> <!-- /container -->
+{% endblock %}
