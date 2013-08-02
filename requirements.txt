@@ -1,5 +1,4 @@
 Flask==0.10.1
-Flask-Bootstrap==3.0.0.rc1
 Flask-WTF==0.8.4
 Jinja2==2.7
 MarkupSafe==0.18
